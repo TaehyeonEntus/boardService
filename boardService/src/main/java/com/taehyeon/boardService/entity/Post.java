@@ -20,6 +20,7 @@ public class Post {
     private Long id;
 
     private String title;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name="member_id")
@@ -28,17 +29,10 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "title='" + title + '\'' +
-                ", member=" + member +
-                ", comments=" + comments +
-                '}';
-    }
 
-    public Post(String title, Member member) {
-        this.title = title;
+    public Post(Member member, String title, String content) {
         this.member = member;
+        this.title = title;
+        this.content = content;
     }
 }

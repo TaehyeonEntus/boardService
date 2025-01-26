@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Post</h1>
+
+    <!-- 게시글 제목 및 내용 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title" th:text="${post.title}">Post Title</h2>
+            <p class="card-text" th:text="${post.content}">Post Content</p>
+            <footer class="blockquote-footer" th:text="'Written by ' + ${post.member.name}">Author Name</footer>
+        </div>
+    </div>
+
+    <!-- 댓글 섹션 -->
+    <h3>Comments</h3>
+    <div class="list-group">
+        <div th:each="comment : ${post.comments}" class="list-group-item">
+            <p class="mb-1" th:text="${comment.content}">Comment Content</p>
+            <small class="text-muted" th:text="'Commented by ' + ${comment.member.name}">Comment Author</small>
+        </div>
+    </div>
+
+    <!-- 게시글 목록으로 돌아가기 버튼 -->
+    <a href="/board" class="btn btn-secondary mt-4">Back to Board</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,11 +1,9 @@
 package com.taehyeon.boardService.repository;
 
-import com.taehyeon.boardService.entity.Member;
+import com.taehyeon.boardService.entity.LocalMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface LocalMemberRepository extends JpaRepository<LocalMember, Long> {
 }
