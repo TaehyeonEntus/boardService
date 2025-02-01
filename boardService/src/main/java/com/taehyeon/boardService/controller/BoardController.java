@@ -1,11 +1,13 @@
 package com.taehyeon.boardService.controller;
 
+import com.taehyeon.boardService.aop.LoggedInOnly;
 import com.taehyeon.boardService.dto.PostSaveRequestDto;
 import com.taehyeon.boardService.entity.Post;
 import com.taehyeon.boardService.exception.memberExceptions.MemberException;
 import com.taehyeon.boardService.exception.postExceptions.PostException;
 import com.taehyeon.boardService.service.BoardService;
 import com.taehyeon.boardService.service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@LoggedInOnly
 public class BoardController {
     private final BoardService boardService;
     private final MemberService memberService;
@@ -47,5 +50,11 @@ public class BoardController {
                                 @RequestParam String comment) throws MemberException {
         //todo
         return "redirect:/board/" + postId;
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 }

@@ -8,23 +8,11 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2>Register</h2>
-    <form action="/register" method="post">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
-        </div>
+    <h2>Kakao Member Register</h2>
+    <form action="/kakaoRegister" method="post">
         <div class="form-group">
             <label for="nickname">Nickname</label>
             <input type="text" class="form-control" id="nickname" name="nickname" placeholder="Enter your nickname" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-        </div>
-        <div class="form-group">
-            <label for="passwordConfirm">Confirm Password</label>
-            <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="Confirm your password" required>
         </div>
         <button type="submit" class="btn btn-success">Register</button>
     </form>

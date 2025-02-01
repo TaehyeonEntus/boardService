@@ -12,17 +12,17 @@ public class Member {
     @Id //PK 지정
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="member_id")
-    private Long id;
+    protected Long id;
 
     @Column(nullable = false, unique = true)
-    private String nickName;
+    protected String nickname;
 
     @OneToMany(mappedBy = "member")
-    private List<Comment> comments = new ArrayList<>();
+    protected List<Comment> comments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    protected Role role;
 
     @OneToMany(mappedBy = "member")
-    private List<Post> posts = new ArrayList<>();
+    protected List<Post> posts = new ArrayList<>();
 }

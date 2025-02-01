@@ -35,23 +35,29 @@ public class BoardService {
     }
 
     public void addComment(Comment comment) {
-        commentRepository.save(comment);
+        commentRepository
+                .save(comment);
     }
 
     public Post findPostById(Long id) throws PostException {
-        return postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        return postRepository
+                .findById(id)
+                .orElseThrow(PostNotFoundException::new);
     }
 
     public List<Post> findAllPost(){
-        return postRepository.findAll();
+        return postRepository
+                .findAll();
     }
 
     public void removePost(Post post) {
-        postRepository.delete(post);
+        postRepository
+                .delete(post);
     }
 
     public void removeComment(Post post, Comment comment) {
-        commentRepository.delete(comment);
+        commentRepository
+                .delete(comment);
     }
 
 }

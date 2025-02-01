@@ -1,24 +1,35 @@
 package com.taehyeon.boardService.service;
 
-import com.taehyeon.boardService.dto.KakaoTokenResponseDto;
-import com.taehyeon.boardService.dto.KakaoUserInfoResponseDto;
+import com.taehyeon.boardService.dto.*;
+import com.taehyeon.boardService.entity.KakaoMember;
+import com.taehyeon.boardService.entity.LocalMember;
+import com.taehyeon.boardService.entity.Member;
+import com.taehyeon.boardService.exception.AuthException.AuthException;
+import com.taehyeon.boardService.exception.memberExceptions.MemberException;
+import com.taehyeon.boardService.repository.KakaoMemberRepository;
+import com.taehyeon.boardService.repository.LocalMemberRepository;
+import com.taehyeon.boardService.repository.MemberRepository;
 import io.netty.handler.codec.http.HttpHeaderValues;
-import lombok.NoArgsConstructor;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 @Service
 @Slf4j
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class AuthService {
+    private final MemberRepository memberRepository;
+    private final LocalMemberRepository localMemberRepository;
+    private final MemberService memberService;
+    private final KakaoMemberRepository kakaoMemberRepository;
     @Value("${kakao.client_id}")
     private String clientId;
     private String KAUTH_TOKEN_URL_HOST = "https://kauth.kakao.com";
@@ -52,7 +63,6 @@ public class AuthService {
     }
 
     public KakaoUserInfoResponseDto getKakaoUserInfo(String accessToken) {
-
         KakaoUserInfoResponseDto userInfo = WebClient.create(KAUTH_USER_URL_HOST)
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -75,7 +85,50 @@ public class AuthService {
         return userInfo;
     }
 
-    public void registerKakaoMember(String nickname){
+    public void registerKakaoMember(KakaoMemberRegisterRequestDto kakaoMemberRegisterRequestDto) {
+        KakaoMember kakaoMember = kakaoMemberRepository.findByKakaoMemberId(kakaoMemberRegisterRequestDto.getKakaoMemberId());
+        Member memberByNickname = memberRepository.findByNickname(kakaoMemberRegisterRequestDto.getNickname());
+        if (kakaoMember != null)
+            throw new MemberException("이미 가입하신 아이디 입니다.");
+        if (memberByNickname != null)
+            throw new MemberException("이미 사용중인 닉네임 입니다.");
+        memberService.addKakaoMember(new KakaoMember(
+                kakaoMemberRegisterRequestDto.getKakaoMemberId(),
+                kakaoMemberRegisterRequestDto.getNickname()));
+    }
 
+    public void registerLocalMember(LocalMemberRegisterRequestDto localMemberRegisterRequestDto) throws MemberException {
+        LocalMember localMember = localMemberRepository
+                .findByUsername(localMemberRegisterRequestDto.getUsername());
+        Member memberByNickname = memberRepository
+                .findByNickname(localMemberRegisterRequestDto.getNickname());
+        //아이디 검사
+        if (localMember != null)
+            throw new MemberException("이미 가입하신 아이디 입니다.");
+        //비밀번호 검사
+        if (!localMemberRegisterRequestDto.getPassword().equals(localMemberRegisterRequestDto.getPasswordConfirm()))
+            throw new MemberException("비밀번호가 일치하지 않습니다.");
+        //닉네임 검사
+        if (memberByNickname != null)
+            throw new MemberException("이미 사용중인 닉네임 입니다.");
+        memberService.addLocalMember(new LocalMember(
+                localMemberRegisterRequestDto.getUsername(),
+                localMemberRegisterRequestDto.getNickname(),
+                localMemberRegisterRequestDto.getPassword()));
+    }
+
+    public Long loginLocalMember(LocalMemberLoginDto localMemberLoginDto) {
+        String username = localMemberLoginDto.getUsername();
+        String password = localMemberLoginDto.getPassword();
+
+        LocalMember localMember = localMemberRepository.findByUsername(username);
+        if(localMember == null){
+            //아이디 오류
+            throw new MemberException("존재하지 않는 아이디");
+        }
+        else if(!localMember.getPassword().equals(password)){
+            throw new AuthException("잘못된 비밀번호");
+        }
+        return localMember.getId();
     }
 }
