@@ -2,6 +2,8 @@ package com.taehyeon.boardService.controller;
 
 import com.taehyeon.boardService.aop.LoggedInOnly;
 import com.taehyeon.boardService.dto.PostSaveRequestDto;
+import com.taehyeon.boardService.entity.Comment;
+import com.taehyeon.boardService.entity.Member;
 import com.taehyeon.boardService.entity.Post;
 import com.taehyeon.boardService.exception.memberExceptions.MemberException;
 import com.taehyeon.boardService.exception.postExceptions.PostException;
@@ -29,11 +31,17 @@ public class BoardController {
         return "board";
     }
 
+    @GetMapping("/board/new")
+    public String showAddPostForm(Model model) {
+        return "addPost";
+    }
+
     @PostMapping("/board/new")
     public String createPost(@RequestParam String title,
                              @RequestParam String content,
-                             @RequestParam Long authorId) throws MemberException {
-        boardService.addPost(new PostSaveRequestDto(authorId, title, content));
+                             HttpSession httpSession) throws MemberException {
+        Long memberId = (Long) httpSession.getAttribute("memberId");
+        boardService.addPost(new PostSaveRequestDto(memberId, title, content));
         return "redirect:/board";
     }
 
@@ -44,11 +52,17 @@ public class BoardController {
         return "post";
     }
 
-    @PostMapping("/board/{postId}/addComment")
+    @PostMapping("/board/{postId}/comment")
     public String createComment(@PathVariable Long postId,
-                                @RequestParam String name,
-                                @RequestParam String comment) throws MemberException {
+                                HttpSession httpSession,
+                                @RequestParam String commentContent) throws MemberException {
         //todo
+        Post post = boardService.findPostById(postId);
+        Long memberId = (Long) httpSession.getAttribute("memberId");
+        Member member = memberService.findMemberByMemberId(memberId);
+
+        boardService.addComment(new Comment(member,post,commentContent));
+
         return "redirect:/board/" + postId;
     }
 

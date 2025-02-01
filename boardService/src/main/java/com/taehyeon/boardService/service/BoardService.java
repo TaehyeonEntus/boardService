@@ -25,11 +25,11 @@ public class BoardService {
 
     //게시글 추가
     public void addPost(PostSaveRequestDto postSaveRequestDto) throws MemberException{
-        Long authorId = postSaveRequestDto.getAuthorId();
+        Long memberId = postSaveRequestDto.getMemberId();
         String title = postSaveRequestDto.getTitle();
         String content = postSaveRequestDto.getContent();
         Member member = memberRepository
-                .findById(authorId)
+                .findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
         postRepository.save(new Post(member, title, content));
     }

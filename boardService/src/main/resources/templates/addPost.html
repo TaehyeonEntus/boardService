@@ -2,9 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>addPost</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Post</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+<div class="container mt-5">
+    <h1>Create New Post</h1>
 
+    <!-- 게시글 작성 폼 -->
+    <form action="/board/new" method="post">
+        <div class="form-group">
+            <label for="title">Post Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Post Content</label>
+            <textarea class="form-control" id="content" name="content" rows="4" placeholder="Enter content" required></textarea>
+        </div>
+
+        <!-- hidden으로 authorId 전달 -->
+        <input type="hidden" name="authorId" value="<!-- server-side code to inject the author ID here -->">
+
+        <button type="submit" class="btn btn-primary">Create Post</button>
+        <a href="/board" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

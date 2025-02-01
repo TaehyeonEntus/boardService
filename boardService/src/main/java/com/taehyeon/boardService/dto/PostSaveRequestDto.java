@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public class PostSaveRequestDto {
-    private Long authorId;
+    private Long memberId;
     private String title;
     private String content;
 
-    public PostSaveRequestDto(Long authorId, String title, String content) {
-        this.authorId = authorId;
+    public PostSaveRequestDto(Long memberId, String title, String content) {
+        this.memberId = memberId;
         this.title = title;
         this.content = content;
     }
